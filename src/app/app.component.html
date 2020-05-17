@@ -1,20 +1,126 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+<div class="content">
+  <div class="actions">
+      <button mat-flat-button (click)="newGame()">New Game</button>
+      <button mat-flat-button [disabled]="!stillDrawing || dealerBlackJack || myBlackJack || myHand.busted" (click)="hit(myHand)">Hit</button>
+      <button mat-flat-button (click)="stay()" [disabled]="!stillDrawing || dealerBlackJack || myBlackJack || dealersHand.busted || myHand.busted">Stay</button>
+  </div>
+  <div class="hands">
+      <div>
+          <span>Dealer's Hand - count: <span *ngIf="!stillDrawing">{{ dealersHand.count }}</span><span *ngIf="dealersHand.busted" style="color: red">Busted</span></span>
+          <div class="cards">
+              <div *ngFor="let card of dealersHand.cards; let i = index" [ngClass]="{ 'card': true, 'hidden': (i === 1 && stillDrawing && !dealerBlackJack), 'green-border': dealerBlackJack, 'red-border': dealersHand.busted }" >
+                  <div [ngSwitch]="card.number" class="number top-number">
+                      <ng-container *ngSwitchCase="11">
+                          <span>J</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="12">
+                          <span>Q</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="13">
+                          <span>K</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="14">
+                          <span>A</span>
+                      </ng-container>
+                      <ng-container *ngSwitchDefault>
+                          <span>{{ card.value }}</span>
+                      </ng-container>
+                  </div>
+                  <div [ngSwitch]="card.suit" [ngClass]="{'hidden': stillDrawing && !dealerBlackJack && i === 1}">
+                      <ng-container *ngSwitchCase="'spades'">
+                          <img src="assets/svg/spade.svg"/>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'diamonds'">
+                          <img src="assets/svg/diamond.png"/>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'hearts'">
+                          <img src="assets/svg/heart.png"/>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'clubs'">
+                          <img src="assets/svg/club.png"/>
+                      </ng-container>
+                  </div>
+                  <div [ngSwitch]="card.number" class="number bottom-number">
+                      <ng-container *ngSwitchCase="11">
+                          <span>J</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="12">
+                          <span>Q</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="13">
+                          <span>K</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="14">
+                          <span>A</span>
+                      </ng-container>
+                      <ng-container *ngSwitchDefault>
+                          <span>{{ card.value }}</span>
+                      </ng-container>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div>
+          <span>Your Hand -- Count: {{ myHand.count }} <span *ngIf="myHand.busted" style="color: red">BUSTED</span></span>
+          <div class="cards">
+              <div *ngFor="let card of myHand.cards" [ngClass]="{ 'card': true, 'green-border': myBlackJack, 'red-border': myHand.busted}" >
+                  <div [ngSwitch]="card.number" class="number top-number">
+                      <ng-container *ngSwitchCase="11">
+                          <span>J</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="12">
+                          <span>Q</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="13">
+                          <span>K</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="14">
+                          <span>A</span>
+                      </ng-container>
+                      <ng-container *ngSwitchDefault>
+                          <span>{{ card.value }}</span>
+                      </ng-container>
+                  </div>
+                  <div [ngSwitch]="card.suit">
+                      <ng-container *ngSwitchCase="'spades'">
+                          <img src="assets/svg/spade.svg"/>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'diamonds'">
+                          <img src="assets/svg/diamond.png"/>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'hearts'">
+                          <img src="assets/svg/heart.png"/>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'clubs'">
+                          <img src="assets/svg/club.png"/>
+                      </ng-container>
+                  </div>
+                  <div [ngSwitch]="card.number" class="number bottom-number">
+                      <ng-container *ngSwitchCase="11">
+                          <span>J</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="12">
+                          <span>Q</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="13">
+                          <span>K</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="14">
+                          <span>A</span>
+                      </ng-container>
+                      <ng-container *ngSwitchDefault>
+                          <span>{{ card.value }}</span>
+                      </ng-container>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div>
+      <span>{{ dealerBlackJack ? 'Dealer Wins with BLACK JACK :\'((' : '' }}</span>
+      <span>{{ myBlackJack && !dealerBlackJack ? 'You Win with BLACK JACK!!!' : '' }}</span>
+      <span>{{ dealersHand.busted ? 'Dealer BUSTED - You win!!' : '' }}</span>
+      <span>{{ myHand.busted ? 'You BUSTED :(' : '' }}</span>
+      <span *ngIf="finishedGameMessage">{{ finishedGameMessage }} {{ dealersHand.count}} - {{ myHand.count }}</span>
+  </div>
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
-
