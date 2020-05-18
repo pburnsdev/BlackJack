@@ -58,11 +58,19 @@ export class AppComponent implements OnInit {
     this.myBlackJack = this.myHand.count === 21;
   }
 
+  // for testing
+  hitAce(hand: Hand) {;
+    const ace = this.workingDeck.cards.find(c => c.number === 14);
+    hand.cards.push(ace);
+    hand.count += ace.value;
+    this.handleAces(hand);
+  }
+
   hit(hand: Hand) {
     const newCard = this.workingDeck.cards.splice(Math.random() * this.workingDeck.cards.length, 1)[0];
     hand.cards.push(newCard);
     hand.count += newCard.value;
-    if (this.myHand.cards.find(c => c.number === 14)) {
+    if (hand.cards.find(c => c.number === 14)) {
       this.handleAces(hand);
     }
     hand.busted = hand.count > 21;

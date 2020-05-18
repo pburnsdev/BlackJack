@@ -6,9 +6,9 @@
   </div>
   <div class="hands">
       <div>
-          <span>Dealer's Hand - count: <span *ngIf="!stillDrawing">{{ dealersHand.count }}</span><span *ngIf="dealersHand.busted" style="color: red">Busted</span></span>
+          <span>Dealer's Hand - count: <span *ngIf="!stillDrawing || myHand.busted || myBlackJack || dealerBlackJack">{{ dealersHand.count }}</span><span *ngIf="dealersHand.busted" style="color: red">Busted</span></span>
           <div class="cards">
-              <div *ngFor="let card of dealersHand.cards; let i = index" [ngClass]="{ 'card': true, 'hidden': (i === 1 && stillDrawing && !dealerBlackJack), 'green-border': dealerBlackJack, 'red-border': dealersHand.busted }" >
+              <div *ngFor="let card of dealersHand.cards; let i = index" [ngClass]="{ 'card': true, 'hidden': (i === 1 && stillDrawing && !dealerBlackJack && !myHand.busted && !myBlackJack), 'green-border': dealerBlackJack, 'red-border': dealersHand.busted }" >
                   <div [ngSwitch]="card.number" class="number top-number">
                       <ng-container *ngSwitchCase="11">
                           <span>J</span>
@@ -26,7 +26,7 @@
                           <span>{{ card.value }}</span>
                       </ng-container>
                   </div>
-                  <div [ngSwitch]="card.suit" [ngClass]="{'hidden': stillDrawing && !dealerBlackJack && i === 1}">
+                  <div [ngSwitch]="card.suit" [ngClass]="{'hidden': stillDrawing && !dealerBlackJack && !myBlackJack && i === 1 && !myHand.busted}">
                       <ng-container *ngSwitchCase="'spades'">
                           <img src="assets/svg/spade.svg"/>
                       </ng-container>
